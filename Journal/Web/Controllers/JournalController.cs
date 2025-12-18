@@ -40,4 +40,42 @@ public class JournalController(JournalService service) : Controller
         }
         return View(journal);
     }
+
+    public async Task<IActionResult> Edit(int id)
+    {
+        var journal = await service.GetByIdAsync(id);
+        if (journal == null)
+        {
+            return NotFound();
+        }
+        return View(journal);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Edit(int id, Journal journal)
+    {
+        if (id != journal.Id)
+        {
+            return NotFound();
+        }
+        if (ModelState.IsValid)
+        {
+            await service.UpdateAsync(journal);
+            return RedirectToAction(nameof(Index));
+        }
+        return View(journal);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var journal = await service.GetByIdAsync(id);
+        if (journal == null) {
+            return NotFound();
+        }
+        await service.DeleteAsync(journal);
+        return RedirectToAction(nameof(Index));
+    }
 }
