@@ -6,6 +6,13 @@ public class HomeController : Controller
 {
     public IActionResult Index()
     {
-        return View();
+        if (User.Identity?.IsAuthenticated == true)
+        {
+            return RedirectToAction("Index", "Journal");
+        }
+        else
+        {
+            return RedirectToPage("/Account/Login", new { area = "Identity" });
+        }
     }
 }

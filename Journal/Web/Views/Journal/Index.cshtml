@@ -1,0 +1,38 @@
+﻿@using Domain.Models
+@model IEnumerable<Journal>
+@{
+    ViewData["Title"] = "Journals";
+}
+
+<a asp-action="Create" asp-controller="Journal" class="btn btn-sm btn-primary">New Journal</a>
+
+<h1>Journals</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.First().Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.First().CreatedAt)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreatedAt)
+                </td>
+                <td>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
