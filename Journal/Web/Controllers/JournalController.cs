@@ -30,4 +30,14 @@ public class JournalController(JournalService service) : Controller
         }
         return View(journal);
     }
+
+    public async Task<IActionResult> Details(int id)
+    {
+        var journal = await service.GetByIdAsync(id);
+        if (journal == null)
+        {
+            return NotFound();
+        }
+        return View(journal);
+    }
 }

@@ -6,15 +6,20 @@
 }
 
 <div class="row mt-2">
-    <h1>Journals</h1>
+    <div class="col-12">
+        <h1>Journals</h1>
+    </div>
     @foreach (var item in Model)
     {
-        <a asp-action="Details" asp-controller="Journal" asp-route-id="@item.Id" title="View journal" style="text-decoration: none !important">
-            <div class="card col-md-4">
-                <div class="card-body">
-                    <h5 class="card-title">@CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(item.Month), @item.Year</h5>
+        <div class="col-md-4 mb-3">
+            <a asp-action="Details" asp-controller="Journal" asp-route-id="@item.Id" title="View" class="text-decoration-none">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">@CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(item.Month), @item.Year</h5>
+                        <img src="~/images/book.jpg" alt="@item.Id" class="img-fluid" />
+                    </div>
                 </div>
-            </div>
-        </a>
+            </a>
+        </div>
     }
 </div>

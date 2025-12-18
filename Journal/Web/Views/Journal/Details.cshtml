@@ -1,0 +1,60 @@
+﻿@using Domain.Models;
+@using System.Globalization
+@model Journal
+@{
+    ViewData["Title"] = "Journal Details";
+}
+
+<div class="mb-3">
+    <a asp-action="Index" asp-controller="Journal" class="btn btn-secondary">Back</a>
+</div>
+
+<div class="card col-md-6 m-auto">
+    <h5 class="card-header">
+        @CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(Model.Month), @Model.Year
+    </h5>
+    <div class="card-body">
+        <p class="card-text">
+            <strong>Created:</strong> @Model.CreatedAt.ToString("MM/dd/yyyy")
+            <br />
+            <strong>Entries:</strong> @Model.JournalEntries.Count
+        </p>
+        
+        <div class="d-flex gap-2 mt-3">
+            <a asp-action="Entries" asp-controller="Journal" asp-route-id="@Model.Id" class="btn btn-primary">
+                View Entries
+            </a>
+            <a asp-action="Edit" asp-controller="Journal" asp-route-id="@Model.Id" class="btn btn-warning">
+                Edit
+            </a>
+            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                Delete
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete the journal for <strong>@CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(Model.Month), @Model.Year</strong>?
+                @if (Model.JournalEntries.Count > 0)
+                {
+                    <br /><br />
+                    <span class="text-danger">This will also delete @Model.JournalEntries.Count entr@(Model.JournalEntries.Count == 1 ? "y" : "ies").</span>
+                }
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form asp-action="Delete" asp-controller="Journal" asp-route-id="@Model.Id" method="post" class="d-inline">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

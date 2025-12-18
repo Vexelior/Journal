@@ -1,8 +1,21 @@
+@font-face {
+    font-family: 'Space Mono';
+    src: url('/fonts/Space_Mono/SpaceMono-Bold.ttf');
+}
+
+@font-face {
+    font-family: 'Plus Jakarta Sans';
+    src: url('/fonts/Plus_Jakarta_Sans/PlusJakartaSans-VariableFont_wght.ttf');
+}
+
 :root {
     --primary-color: #4CAF50;
     --secondary-color: #FF9800;
     --background-color: #f9f9f9;
     --text-color: #333333;
+    --body-font: 'Plus Jakarta Sans', sans-serif;
+    --header-font: 'Space Mono', sans-serif;
+}
 
 html {
     font-size: 14px;
@@ -12,6 +25,16 @@ html {
 
 body {
     margin-bottom: 60px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--header-font);
+    color: var(--text-color);
+}
+
+p, li, span, div {
+    font-family: var(--body-font);
+    color: var(--text-color);
 }
 
 .btn-primary {
