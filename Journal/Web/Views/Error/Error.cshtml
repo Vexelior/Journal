@@ -1,0 +1,37 @@
+﻿@using Web.ViewModels
+@model ErrorViewModel
+@{
+    ViewData["Title"] = "Error";
+}
+<h1 class="text-danger">Error @Model.Code</h1>
+<h2 class="text-danger">An error occurred while processing your request.</h2>
+
+<p>
+    Please contact the system administrator if you think this is a server error. Thank you.
+</p>
+
+@if (Model.Exception != null)
+{
+    @if (Model.Exception.Message != null || Model.Exception.StackTrace != null)
+    {
+        <h3>Exception Details:</h3>
+        @if (Model.Exception.Message != null)
+        {
+            <p>
+                <strong>Message:</strong> @Model.Exception.Message
+            </p>
+        }
+        @if (Model.Exception.StackTrace != null)
+        {
+            <p>
+                <strong>Stack Trace:</strong>
+                <pre>@Model.Exception.StackTrace</pre>
+            </p>
+        }
+    }
+    else
+    {    <p>
+            <strong>No additional exception details are available.</strong>
+        </p>
+    }
+}
