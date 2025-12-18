@@ -1,10 +1,11 @@
 ﻿using Application.Services;
 using Domain.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Controllers;
 
-//[Authorize(Roles = "Admin")]
+[Authorize(Roles = "Admin")]
 public class JournalController(JournalService service) : Controller
 {
     public async Task<IActionResult> Index()
