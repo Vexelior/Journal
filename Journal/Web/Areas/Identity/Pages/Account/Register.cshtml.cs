@@ -108,6 +108,10 @@ namespace Web.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
+            if (!Input.Email.Equals("asanderson1994s@gmail.com", StringComparison.OrdinalIgnoreCase))
+            {
+                return RedirectToPage("/Account/AccessDenied", new { area = "Identity" });
+            }
             returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)

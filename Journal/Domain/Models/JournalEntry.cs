@@ -7,8 +7,12 @@ public class JournalEntry
     public string Content { get; set; } = string.Empty;
     public DateTime CreatedAt { get; set; } = DateTime.Now;
     public DateTime? UpdatedAt { get; set; }
-    public int MonthlyJournalId { get; set; }
+
+    // Foreign keys
+    public int JournalId { get; set; }
     public int PromptId { get; set; }
-    public MonthlyJournal MonthlyJournal { get; set; } = null!;
+
+    // Navigation properties
+    public Journal Journal { get; set; } = null!;
     public Prompt Prompt { get; set; } = null!;
 }

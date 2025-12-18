@@ -7,8 +7,6 @@ namespace Infrastructure.Data;
 public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext(options)
 {
     public DbSet<Journal> Journals { get; set; }
-    public DbSet<YearlyJournal> YearlyJournals { get; set; }
-    public DbSet<MonthlyJournal> MonthlyJournals { get; set; }
     public DbSet<JournalEntry> JournalEntries { get; set; }
     public DbSet<Prompt> Prompts { get; set; }
 
@@ -16,45 +14,72 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<YearlyJournal>()
-            .HasOne(y => y.Journal)
-            .WithMany(j => j.YearlyJournals)
-            .HasForeignKey(y => y.JournalId)
-            .OnDelete(DeleteBehavior.Cascade);
+        // Journal configuration
+        modelBuilder.Entity<Journal>(entity =>
+        {
+            entity.HasKey(j => j.Id);
 
-        modelBuilder.Entity<Prompt>()
-            .HasOne(p => p.Journal)
-            .WithMany(j => j.Prompts)
-            .HasForeignKey(p => p.JournalId)
-            .OnDelete(DeleteBehavior.SetNull);
+            entity.Property(j => j.Month)
+                .IsRequired();
 
-        modelBuilder.Entity<YearlyJournal>()
-            .HasIndex(y => new { y.JournalId, y.Year })
-            .IsUnique();
+            entity.Property(j => j.Year)
+                .IsRequired();
 
-        modelBuilder.Entity<MonthlyJournal>()
-            .HasOne(m => m.YearlyJournal)
-            .WithMany(y => y.MonthlyJournals)
-            .HasForeignKey(m => m.YearlyJournalId)
-            .OnDelete(DeleteBehavior.Cascade);
+            entity.Property(j => j.UserId)
+                .IsRequired()
+                .HasMaxLength(450);
 
-        modelBuilder.Entity<MonthlyJournal>()
-            .HasIndex(m => new { m.YearlyJournalId, m.Month })
-            .IsUnique();
+            entity.Property(j => j.CreatedAt)
+                .IsRequired();
 
-        modelBuilder.Entity<JournalEntry>()
-            .HasOne(e => e.MonthlyJournal)
-            .WithMany(m => m.JournalEntries)
-            .HasForeignKey(e => e.MonthlyJournalId)
-            .OnDelete(DeleteBehavior.Cascade);
+            entity.HasIndex(j => new { j.UserId, j.Year, j.Month })
+                .IsUnique();
+        });
 
-        modelBuilder.Entity<JournalEntry>()
-            .HasOne(e => e.Prompt)
-            .WithMany(p => p.JournalEntries)
-            .HasForeignKey(e => e.PromptId)
-            .OnDelete(DeleteBehavior.Restrict);
+        // Prompt configuration
+        modelBuilder.Entity<Prompt>(entity =>
+        {
+            entity.HasKey(p => p.Id);
 
-        modelBuilder.Entity<JournalEntry>()
-            .HasIndex(e => e.EntryDate);
+            entity.Property(p => p.Text)
+                .IsRequired()
+                .HasMaxLength(500);
+
+            entity.Property(p => p.IsActive)
+                .IsRequired()
+                .HasDefaultValue(true);
+
+            entity.Property(p => p.CreatedAt)
+                .IsRequired();
+        });
+
+        // JournalEntry configuration
+        modelBuilder.Entity<JournalEntry>(entity =>
+        {
+            entity.HasKey(je => je.Id);
+
+            entity.Property(je => je.Content)
+                .IsRequired();
+
+            entity.Property(je => je.EntryDate)
+                .IsRequired();
+
+            entity.Property(je => je.CreatedAt)
+                .IsRequired();
+
+            // Journal relationship
+            entity.HasOne(je => je.Journal)
+                .WithMany(j => j.JournalEntries)
+                .HasForeignKey(je => je.JournalId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Prompt relationship
+            entity.HasOne(je => je.Prompt)
+                .WithMany(p => p.JournalEntries)
+                .HasForeignKey(je => je.PromptId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasIndex(je => new { je.JournalId, je.PromptId, je.EntryDate });
+        });
     }
 }

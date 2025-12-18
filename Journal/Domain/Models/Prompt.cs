@@ -6,7 +6,7 @@ public class Prompt
     public string Text { get; set; } = string.Empty;
     public DateTime CreatedAt { get; set; } = DateTime.Now;
     public bool IsActive { get; set; } = true;
-    public int? JournalId { get; set; }
-    public Journal? Journal { get; set; }
+
+    // Navigation properties
     public ICollection<JournalEntry> JournalEntries { get; set; } = new List<JournalEntry>();
 }
