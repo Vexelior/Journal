@@ -3,7 +3,7 @@ using Domain.Models;
 
 namespace Application.Services;
 
-public class PromptService(IRepository<Prompt> promptRepository)
+public class PromptService(IPromptRepository promptRepository)
 {
     public async Task<Prompt?> GetByIdAsync(int id)
     {
@@ -34,5 +34,10 @@ public class PromptService(IRepository<Prompt> promptRepository)
     public async Task DeleteAsync(Prompt prompt)
     {
         await promptRepository.Delete(prompt);
+    }
+
+    public async Task<IEnumerable<Prompt>> GetPromptsByJournalId(int id)
+    {
+        return await promptRepository.GetPromptsByJournalId(id);
     }
 }

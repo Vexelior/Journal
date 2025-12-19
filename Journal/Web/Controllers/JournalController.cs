@@ -2,25 +2,26 @@
 using Domain.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Globalization;
 
 namespace Web.Controllers;
 
 [Authorize(Roles = "Admin")]
-public class JournalController(JournalService service, EntriesService entriesService, JournalExportService exportService, DocumentExportService documentService) : Controller
+public class JournalController(JournalService journalService, PromptService promptService, EntriesService entriesService, JournalExportService exportService, DocumentExportService documentService) : Controller
 {
     public async Task<IActionResult> Index()
     {
-        var journals = await service.GetAllAsync();
+        var journals = await journalService.GetAllAsync();
+        var fullJournals = new List<Journal>();
         foreach (var journal in journals)
         {
-            var entries = await entriesService.GetEntriesByJournalIdAsync(journal.Id);
-            if (entries == null)
+            var fullJournal = await journalService.GetFullJournal(journal.Id);
+            if (fullJournal != null)
             {
-                return NotFound();
+                fullJournals.Add(fullJournal);
             }
-            journal.JournalEntries = (ICollection<JournalEntry>)entries;
         }
-        return View(journals);
+        return View(fullJournals);
     }
 
     public IActionResult Create()
@@ -34,7 +35,7 @@ public class JournalController(JournalService service, EntriesService entriesSer
     {
         if (ModelState.IsValid)
         {
-            await service.AddAsync(journal);
+            await journalService.AddAsync(journal);
             return RedirectToAction(nameof(Index));
         }
         return View(journal);
@@ -42,7 +43,7 @@ public class JournalController(JournalService service, EntriesService entriesSer
 
     public async Task<IActionResult> Details(int id)
     {
-        var journal = await service.GetByIdAsync(id);
+        var journal = await journalService.GetFullJournal(id);
         if (journal == null)
         {
             return NotFound();
@@ -52,7 +53,7 @@ public class JournalController(JournalService service, EntriesService entriesSer
 
     public async Task<IActionResult> Edit(int id)
     {
-        var journal = await service.GetByIdAsync(id);
+        var journal = await journalService.GetFullJournal(id);
         if (journal == null)
         {
             return NotFound();
@@ -70,7 +71,7 @@ public class JournalController(JournalService service, EntriesService entriesSer
         }
         if (ModelState.IsValid)
         {
-            await service.UpdateAsync(journal);
+            await journalService.UpdateAsync(journal);
             return RedirectToAction(nameof(Index));
         }
         return RedirectToAction(nameof(Details), new { id = journal.Id });
@@ -80,71 +81,25 @@ public class JournalController(JournalService service, EntriesService entriesSer
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Delete(int id)
     {
-        var journal = await service.GetByIdAsync(id);
-        if (journal == null) {
+        var journal = await journalService.GetByIdAsync(id);
+        if (journal == null)
+        {
             return NotFound();
         }
-        await service.DeleteAsync(journal);
+        await journalService.DeleteAsync(journal);
         return RedirectToAction(nameof(Index));
-    }
-
-    public async Task<IActionResult> ExportText(int id)
-    {
-        var journal = await service.GetByIdAsync(id);
-        if (journal == null)
-        {
-            return NotFound();
-        }
-        var entries = await entriesService.GetEntriesByJournalIdAsync(journal.Id);
-        if (entries == null) 
-        {
-            return NotFound();
-        }
-        journal.JournalEntries = (ICollection<JournalEntry>)entries;
-        var content = exportService.GenerateTextExport(journal);
-        var monthName = System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(journal.Month);
-        var fileName = $"Journal_{monthName}_{journal.Year}.txt";
-
-        return File(content, "text/plain", fileName);
-    }
-
-    public async Task<IActionResult> ExportDocx(int id)
-    {
-        var journal = await service.GetByIdAsync(id);
-        if (journal == null)
-        {
-            return NotFound();
-        }
-        var entries = await entriesService.GetEntriesByJournalIdAsync(journal.Id);
-        if (entries == null)
-        {
-            return NotFound();
-        }
-        journal.JournalEntries = (ICollection<JournalEntry>)entries;
-        var content = documentService.GenerateDocx(journal);
-        var monthName = System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(journal.Month);
-        var fileName = $"Journal_{monthName}_{journal.Year}.docx";
-
-        return File(content, "application/vnd.openxmlformats-officedocument.wordprocessingml.document", fileName);
     }
 
     public async Task<IActionResult> ExportPdf(int id)
     {
-        var journal = await service.GetByIdAsync(id);
+        var journal = await journalService.GetFullJournal(id);
         if (journal == null)
         {
             return NotFound();
         }
-        var entries = await entriesService.GetEntriesByJournalIdAsync(journal.Id);
-        if (entries == null)
-        {
-            return NotFound();
-        }
-        journal.JournalEntries = (ICollection<JournalEntry>)entries;
         var content = documentService.GeneratePdf(journal);
-        var monthName = System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(journal.Month);
+        var monthName = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(journal.Month);
         var fileName = $"Journal_{monthName}_{journal.Year}.pdf";
-
         return File(content, "application/pdf", fileName);
     }
 }

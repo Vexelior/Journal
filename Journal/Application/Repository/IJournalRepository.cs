@@ -4,5 +4,5 @@ namespace Application.Repository;
 
 public interface IJournalRepository : IRepository<Journal>
 {
-    Task<Journal?> GetByIdWithEntriesAsync(int id);
+    Task<Journal?> GetWithEntriesAndPromptsAsync(int id);
 }

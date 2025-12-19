@@ -14,35 +14,33 @@
         @foreach (var item in Model)
         {
             <div class="col-md-4 mb-3">
-                <a asp-action="Details" asp-controller="Journal" asp-route-id="@item.Id" title="View" class="text-decoration-none">
-                    <div class="card h-100">
-                        <div class="card-body">
-                            <h5 class="card-title">@CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(item.Month), @item.Year</h5>
-                            <img src="~/images/book.jpg" alt="@item.Id" class="img-fluid" />
-                        </div>
-                        @if (item.JournalEntries.Any())
-                        {
-                            <div class="d-flex flex-column gap-2">
-                                <div class="btn-group" role="group">
-                                    <a asp-action="ExportText" asp-controller="Journal" asp-route-id="@item.Id" class="btn btn-outline-secondary btn-sm">
-                                        <i class="bi bi-file-text"></i> Export as Text
-                                    </a>
-                                    <a asp-action="ExportDocx" asp-controller="Journal" asp-route-id="@item.Id" class="btn btn-outline-primary btn-sm">
-                                        <i class="bi bi-file-word"></i> Export as DOCX
-                                    </a>
-                                    <a asp-action="ExportPdf" asp-controller="Journal" asp-route-id="@item.Id" class="btn btn-outline-danger btn-sm">
-                                        <i class="bi bi-file-pdf"></i> Export as PDF
-                                    </a>
-                                </div>
+                <div class="card h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h5 class="card-title mb-0">@CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(item.Month), @item.Year</h5>
+                            <div class="dropdown" onclick="event.stopPropagation();">
+                                <button class="btn btn-sm" type="button" id="dropdownMenuButton-@item.Id" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-three-dots-vertical"></i>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton-@item.Id">
+                                    <li>
+                                        <a asp-action="ExportPdf" asp-controller="Journal" asp-route-id="@item.Id" class="dropdown-item text-danger">
+                                            <i class="bi bi-file-pdf"></i> PDF
+                                        </a>
+                                    </li>
+                                </ul>
                             </div>
-                        }
+                        </div>
+                        <a asp-action="Details" asp-controller="Journal" asp-route-id="@item.Id" title="View" class="text-decoration-none">
+                            <img src="~/images/book.jpg" alt="@item.Id" class="img-fluid" />
+                        </a>
                     </div>
-                </a>
+                </div>
             </div>
         }
     }
     else
     {
-        <div class="alert alert-info">No journals found.</div>
+        <div class="alert alert-info">No journals found. <a asp-action="Create" asp-controller="Journal">Create a new journal</a>.</div>
     }
 </div>

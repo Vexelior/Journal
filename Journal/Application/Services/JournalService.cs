@@ -3,7 +3,7 @@ using Domain.Models;
 
 namespace Application.Services;
 
-public class JournalService(IRepository<Journal> journalRepository)
+public class JournalService(IJournalRepository journalRepository)
 {
     public async Task<Journal?> GetByIdAsync(int id)
     {
@@ -28,5 +28,10 @@ public class JournalService(IRepository<Journal> journalRepository)
     public async Task DeleteAsync(Journal journal)
     {
         await journalRepository.Delete(journal);
+    }
+
+    public async Task<Journal?> GetFullJournal(int id)
+    {
+        return await journalRepository.GetWithEntriesAndPromptsAsync(id);
     }
 }

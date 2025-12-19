@@ -20,6 +20,8 @@ builder.Services.AddControllersWithViews();
 // Services \\
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddScoped<IEntriesRepository, EntriesRepository>();
+builder.Services.AddScoped<IPromptRepository, PromptRepository>();
+builder.Services.AddScoped<IJournalRepository, JournalRepository>();
 
 builder.Services.AddScoped<JournalService>();
 builder.Services.AddScoped<EntriesService>();
