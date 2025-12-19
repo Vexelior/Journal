@@ -1,0 +1,88 @@
+﻿@using Domain.Models
+@model IEnumerable<Prompt>
+@{
+    ViewData["Title"] = "Prompts";
+}
+
+<div class="row mt-2">
+    <div class="col-12 mb-3">
+        <div class="d-flex justify-content-between align-items-center">
+            <h1>Journal Prompts</h1>
+            <a asp-action="Create" asp-controller="Prompt" class="btn btn-primary">Create New Prompt</a>
+        </div>
+        <hr />
+    </div>
+
+    <div class="col-12">
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Text</th>
+                    <th>Status</th>
+                    <th>Created</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var prompt in Model.OrderByDescending(p => p.CreatedAt))
+                {
+                    <tr>
+                        <td>@prompt.Text</td>
+                        <td>
+                            @if (prompt.IsActive)
+                            {
+                                <span class="badge bg-success">Active</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">Inactive</span>
+                            }
+                        </td>
+                        <td>@prompt.CreatedAt.ToString("MM/dd/yyyy")</td>
+                        <td>
+                            <div class="btn-group" role="group">
+                                <a asp-action="Details" asp-controller="Prompt" asp-route-id="@prompt.Id" class="btn btn-sm btn-info">Details</a>
+                                <a asp-action="Edit" asp-controller="Prompt" asp-route-id="@prompt.Id" class="btn btn-sm btn-warning">Edit</a>
+                                <form asp-action="ToggleActive" asp-controller="Prompt" asp-route-id="@prompt.Id" method="post" class="d-inline">
+                                    <button type="submit" class="btn btn-sm btn-secondary">
+                                        @(prompt.IsActive ? "Deactivate" : "Activate")
+                                    </button>
+                                </form>
+                                <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal-@prompt.Id">Delete</button>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <div class="modal fade" id="deleteModal-@prompt.Id" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Confirm Delete</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    Are you sure you want to delete this prompt?
+                                    <br /><br />
+                                    <strong>"@prompt.Text"</strong>
+                                    @if (prompt.JournalEntries.Any())
+                                    {
+                                        <br />
+                                
+                                        <br />
+                                        <span class="text-warning">Note: This prompt is used in @prompt.JournalEntries.Count entr@(prompt.JournalEntries.Count == 1 ? "y" : "ies").</span>
+                                    }
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                    <form asp-action="Delete" asp-controller="Prompt" asp-route-id="@prompt.Id" method="post" class="d-inline">
+                                        <button type="submit" class="btn btn-danger">Delete</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

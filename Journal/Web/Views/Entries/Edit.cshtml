@@ -1,0 +1,60 @@
+﻿@using Domain.Models
+@using Microsoft.AspNetCore.Mvc.Rendering
+@model JournalEntry
+@{
+    ViewData["Title"] = "Edit Entry";
+    var prompts = ViewBag.Prompts as SelectList;
+}
+
+<div class="mb-3">
+    <a asp-action="EntriesByJournalId" asp-controller="Entries" asp-route-id="@Model.JournalId" class="btn btn-secondary">Back to Entries</a>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <h1>Edit Entry</h1>
+        <hr />
+
+        <form asp-action="Edit" asp-controller="Entries" method="post">
+            <input type="hidden" name="id" value="@Model.Id" />
+
+            <div class="mb-3">
+                <label for="entryDate" class="form-label">Entry Date</label>
+                <input type="date" class="form-control" id="entryDate" name="entryDate" value="@Model.EntryDate.ToString("yyyy-MM-dd")" required />
+            </div>
+
+            @if (Model.Prompt != null)
+            {
+                <div class="mb-3">
+                    <label class="form-label">Original Prompt</label>
+                    <div class="form-control-plaintext text-muted fst-italic">@Model.Prompt.Text</div>
+                    <small class="form-text text-muted">Prompts cannot be changed after entry creation.</small>
+                </div>
+            }
+
+            <div class="mb-3">
+                <label for="content" class="form-label">Content</label>
+                <textarea class="form-control" id="content" name="content" rows="15" placeholder="Write your journal entry here..." required>@Model.Content</textarea>
+                <span asp-validation-for="Content" class="text-danger"></span>
+            </div>
+
+            @if (Model.UpdatedAt.HasValue)
+            {
+                <div class="mb-3">
+                    <small class="text-muted">Last updated: @Model.UpdatedAt.Value.ToString("g")</small>
+                </div>
+            }
+
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+                <a asp-action="Details" asp-controller="Entries" asp-route-id="@Model.Id" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

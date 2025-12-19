@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Journal Entries";
     var journal = Model.FirstOrDefault()?.Journal;
+    var journalId = ViewBag.JournalId as int? ?? journal?.Id ?? 0;
 }
 
 <div class="mb-3">
@@ -33,11 +34,12 @@
 @if (!Model.Any())
 {
     <div class="alert alert-info" role="alert">
-        No entries found for this journal. <a asp-action="Create" asp-controller="Entries" asp-route-journalId="@journal?.Id" class="alert-link">Create your first entry</a>
+        No entries found for this journal. <a asp-action="Create" asp-controller="Entries" asp-route-journalId="@journalId" class="alert-link">Create your first entry</a>
     </div>
 }
 else
 {
+    <a asp-action="Create" asp-controller="Entries" asp-route-journalId="@journalId" class="btn btn-sm btn-primary mb-3">Add Entry</a>
     <div class="row">
         @foreach (var entry in Model.OrderByDescending(e => e.EntryDate))
         {
@@ -52,7 +54,7 @@ else
                             @if (entry.Content.Length > 150)
                             {
                                 @(entry.Content.Substring(0, 150))
-                    
+
                                 @:...
                             }
                             else

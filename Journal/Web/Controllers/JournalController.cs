@@ -64,7 +64,7 @@ public class JournalController(JournalService service) : Controller
             await service.UpdateAsync(journal);
             return RedirectToAction(nameof(Index));
         }
-        return View(journal);
+        return RedirectToAction(nameof(Details), new { id = journal.Id });
     }
 
     [HttpPost]

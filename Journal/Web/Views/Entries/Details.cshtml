@@ -1,0 +1,51 @@
+﻿@using Domain.Models
+@model JournalEntry
+@{
+    ViewData["Title"] = "Entry Details";
+}
+
+<div class="mb-3">
+    <a asp-action="EntriesByJournalId" asp-controller="Entries" asp-route-id="@Model.JournalId" class="btn btn-secondary">Back to Entries</a>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <h1>Entry Details</h1>
+        <hr />
+
+        <div class="card">
+            <div class="card-header">
+                <strong>@Model.EntryDate.ToString("dddd, MMMM dd, yyyy")</strong>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <small class="text-muted">
+                            <strong>Created:</strong> @Model.CreatedAt.ToString("g")
+                        </small>
+                    </div>
+                    @if (Model.UpdatedAt.HasValue)
+                    {
+                        <div class="col-md-6 text-md-end">
+                            <small class="text-muted">
+                                <strong>Last Updated:</strong> @Model.UpdatedAt.Value.ToString("g")
+                            </small>
+                        </div>
+                    }
+                </div>
+
+                @if (Model.Prompt != null)
+                {
+                    <h6 class="card-subtitle mb-3 text-muted mt-2">
+                        <strong>Prompt:</strong> @Model.Prompt.Text
+                    </h6>
+                }
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Content</label>
+                    <div class="border rounded p-3 bg-light" style="white-space: pre-wrap;">@Model.Content</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

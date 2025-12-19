@@ -1,0 +1,58 @@
+﻿@using Domain.Models
+@using Microsoft.AspNetCore.Mvc.Rendering
+@model JournalEntry
+@{
+    ViewData["Title"] = "Create Entry";
+    var journalId = ViewBag.JournalId as int? ?? 0;
+    var prompts = ViewBag.Prompts as SelectList;
+}
+
+<div class="mb-3">
+    <a asp-action="EntriesByJournalId" asp-controller="Entries" asp-route-id="@journalId" class="btn btn-secondary">Back to Entries</a>
+</div>
+
+<div class="row">
+    <div class="col-md-8 m-auto">
+        <h1>Create New Entry</h1>
+        <hr />
+
+        <form asp-action="Create" asp-controller="Entries" method="post">
+            <input type="hidden" name="journalId" value="@journalId" />
+
+            <div class="mb-3">
+                <label for="entryDate" class="form-label">Entry Date</label>
+                <input type="date" class="form-control" id="entryDate" name="entryDate" value="@DateTime.Now.ToString("yyyy-MM-dd")" required />
+            </div>
+
+            <div class="mb-3">
+                <label for="promptId" class="form-label">Prompt (Optional)</label>
+                <select class="form-select" id="promptId" name="promptId">
+                    <option value="">-- Select a prompt or write freely --</option>
+                    @if (prompts != null)
+                    {
+                        @foreach (var item in prompts)
+                        {
+                            <option value="@item.Value">@item.Text</option>
+                        }
+                    }
+                </select>
+                <div class="form-text">Choose a writing prompt or leave blank for free writing.</div>
+            </div>
+
+            <div class="mb-3">
+                <label for="content" class="form-label">Content</label>
+                <textarea class="form-control" id="content" name="content" rows="15" placeholder="Write your journal entry here..." required></textarea>
+                <span asp-validation-for="Content" class="text-danger"></span>
+            </div>
+
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary">Save Entry</button>
+                <a asp-action="EntriesByJournalId" asp-controller="Entries" asp-route-id="@journalId" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

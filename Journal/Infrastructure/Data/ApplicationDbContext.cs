@@ -25,15 +25,8 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             entity.Property(j => j.Year)
                 .IsRequired();
 
-            entity.Property(j => j.UserId)
-                .IsRequired()
-                .HasMaxLength(450);
-
             entity.Property(j => j.CreatedAt)
                 .IsRequired();
-
-            entity.HasIndex(j => new { j.UserId, j.Year, j.Month })
-                .IsUnique();
         });
 
         // Prompt configuration

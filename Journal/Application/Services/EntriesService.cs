@@ -30,4 +30,15 @@ public class EntriesService(IEntriesRepository journalEntryRepository)
     {
         return await journalEntryRepository.GetEntriesByJournalIdAsync(journalId);
     }
+
+    public async Task CreateEntryAsync(int journalId, string content)
+    {
+        var journalEntry = new JournalEntry
+        {
+            JournalId = journalId,
+            Content = content,
+            CreatedAt = DateTime.Now
+        };
+        await journalEntryRepository.Add(journalEntry);
+    }
 }

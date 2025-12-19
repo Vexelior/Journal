@@ -5,16 +5,19 @@
     ViewData["Title"] = "Edit Journal";
 }
 
+<div class="mb-3">
+    <a asp-action="Details" asp-controller="Journal" asp-route-id="@Model.Id" class="btn btn-secondary">Back to Details</a>
+</div>
+
 <div class="row">
-    <div class="col-md-6 m-auto">
+    <div class="col-md-6">
         <h1>Edit Journal</h1>
         <hr />
-        
+
         <form asp-action="Edit" asp-controller="Journal" method="post">
             <input type="hidden" asp-for="Id" />
             <input type="hidden" asp-for="CreatedAt" />
-            <input type="hidden" asp-for="UserId" />
-            
+
             <div class="mb-3">
                 <label asp-for="Month" class="form-label">Month</label>
                 <select asp-for="Month" class="form-select">
@@ -25,15 +28,25 @@
                 </select>
                 <span asp-validation-for="Month" class="text-danger"></span>
             </div>
-            
+
             <div class="mb-3">
                 <label asp-for="Year" class="form-label">Year</label>
                 <input asp-for="Year" type="number" class="form-control" min="1900" max="2100" />
                 <span asp-validation-for="Year" class="text-danger"></span>
             </div>
-            
+
+            @if (Model.JournalEntries?.Count > 0)
+            {
+                <div class="alert alert-warning" role="alert">
+                    <small>
+                        <strong>Note:</strong> This journal contains @Model.JournalEntries.Count entr@(Model.JournalEntries.Count == 1 ? "y" : "ies").
+                        Changing the month or year will update the journal classification but will not affect existing entries.
+                    </small>
+                </div>
+            }
+
             <div class="d-flex gap-2">
-                <button type="submit" class="btn btn-primary">Save</button>
+                <button type="submit" class="btn btn-primary">Save Changes</button>
                 <a asp-action="Details" asp-controller="Journal" asp-route-id="@Model.Id" class="btn btn-secondary">Cancel</a>
             </div>
         </form>
@@ -41,5 +54,7 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
