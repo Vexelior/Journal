@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Web.Controllers;
 
 [Authorize(Roles = "Admin")]
-public class PromptController(PromptService service) : Controller
+public class PromptController(PromptService service, EntriesService entriesService) : Controller
 {
     public async Task<IActionResult> Index()
     {
@@ -38,6 +38,7 @@ public class PromptController(PromptService service) : Controller
         {
             return NotFound();
         }
+        prompt.JournalEntries = (ICollection<JournalEntry>)await entriesService.GetJournalEntriesByPromptIdAsync(id);
         return View(prompt);
     }
 
@@ -62,7 +63,7 @@ public class PromptController(PromptService service) : Controller
         if (ModelState.IsValid)
         {
             await service.UpdateAsync(prompt);
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Details), new { id = prompt.Id });
         }
         return View(prompt);
     }

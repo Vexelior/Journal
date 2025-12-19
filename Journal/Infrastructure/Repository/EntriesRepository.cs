@@ -13,4 +13,9 @@ public class EntriesRepository(ApplicationDbContext context) : Repository<Journa
     {
         return await _context.JournalEntries.Where(entry => entry.JournalId == journalId).ToListAsync();
     }
+
+    public async Task<IEnumerable<JournalEntry>> GetJournalEntriesByPromptIdAsync(int promptId)
+    {
+        return await _context.JournalEntries.Where(entry => entry.PromptId == promptId).ToListAsync();
+    }
 }

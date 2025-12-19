@@ -7,7 +7,7 @@
 }
 
 <div class="mb-3">
-    <a asp-action="EntriesByJournalId" asp-controller="Entries" asp-route-id="@Model.JournalId" class="btn btn-secondary">Back to Entries</a>
+    <a asp-action="EntriesByJournalId" asp-controller="Entries" asp-route-id="@Model.JournalId" class="btn btn-sm btn-secondary">Back to Entries</a>
 </div>
 
 <div class="row">
@@ -16,11 +16,15 @@
         <hr />
 
         <form asp-action="Edit" asp-controller="Entries" method="post">
-            <input type="hidden" name="id" value="@Model.Id" />
+            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="JournalId" />
+            <input type="hidden" asp-for="PromptId" />
 
             <div class="mb-3">
-                <label for="entryDate" class="form-label">Entry Date</label>
-                <input type="date" class="form-control" id="entryDate" name="entryDate" value="@Model.EntryDate.ToString("yyyy-MM-dd")" required />
+                <label asp-for="EntryDate" class="form-label">Entry Date</label>
+                <input asp-for="EntryDate" type="date" class="form-control" required />
+                <span asp-validation-for="EntryDate" class="text-danger"></span>
             </div>
 
             @if (Model.Prompt != null)
@@ -33,8 +37,8 @@
             }
 
             <div class="mb-3">
-                <label for="content" class="form-label">Content</label>
-                <textarea class="form-control" id="content" name="content" rows="15" placeholder="Write your journal entry here..." required>@Model.Content</textarea>
+                <label asp-for="Content" class="form-label">Content</label>
+                <textarea asp-for="Content" class="form-control" rows="15" placeholder="Write your journal entry here..." required></textarea>
                 <span asp-validation-for="Content" class="text-danger"></span>
             </div>
 
@@ -46,12 +50,13 @@
             }
 
             <div class="d-flex gap-2">
-                <button type="submit" class="btn btn-primary">Save Changes</button>
-                <a asp-action="Details" asp-controller="Entries" asp-route-id="@Model.Id" class="btn btn-secondary">Cancel</a>
+                <button type="submit" class="btn btn-sm btn-primary">Save Changes</button>
+                <a asp-action="Details" asp-controller="Entries" asp-route-id="@Model.Id" class="btn btn-sm btn-secondary">Cancel</a>
             </div>
         </form>
     </div>
 </div>
+
 
 @section Scripts {
     @{

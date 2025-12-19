@@ -41,4 +41,9 @@ public class EntriesService(IEntriesRepository journalEntryRepository)
         };
         await journalEntryRepository.Add(journalEntry);
     }
+
+    public async Task<IEnumerable<JournalEntry>> GetJournalEntriesByPromptIdAsync(int promptId)
+    {
+        return await journalEntryRepository.GetJournalEntriesByPromptIdAsync(promptId);
+    }
 }

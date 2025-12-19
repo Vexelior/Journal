@@ -2,18 +2,17 @@
 @model IEnumerable<JournalEntry>
 @{
     ViewData["Title"] = "Journal Entries";
-    var journal = Model.FirstOrDefault()?.Journal;
-    var journalId = ViewBag.JournalId as int? ?? journal?.Id ?? 0;
+    var journal = ViewBag.Journal as Journal;
 }
 
 <div class="mb-3">
     @if (journal != null)
     {
-        <a asp-action="Details" asp-controller="Journal" asp-route-id="@journal.Id" class="btn btn-secondary">Back to Journal</a>
+        <a asp-action="Details" asp-controller="Journal" asp-route-id="@journal.Id" class="btn btn-sm btn-secondary">Back to Journal</a>
     }
     else
     {
-        <a asp-action="Index" asp-controller="Journal" class="btn btn-secondary">Back to Journals</a>
+        <a asp-action="Index" asp-controller="Journal" class="btn btn-sm btn-secondary">Back to Journals</a>
     }
 </div>
 
@@ -34,12 +33,12 @@
 @if (!Model.Any())
 {
     <div class="alert alert-info" role="alert">
-        No entries found for this journal. <a asp-action="Create" asp-controller="Entries" asp-route-journalId="@journalId" class="alert-link">Create your first entry</a>
+        No entries found for this journal. <a asp-action="Create" asp-controller="Entries" asp-route-journalId="@journal?.Id" class="alert-link">Create your first entry</a>
     </div>
 }
 else
 {
-    <a asp-action="Create" asp-controller="Entries" asp-route-journalId="@journalId" class="btn btn-sm btn-primary mb-3">Add Entry</a>
+    <a asp-action="Create" asp-controller="Entries" asp-route-journalId="@journal?.Id" class="btn btn-sm btn-primary mb-3">Add Entry</a>
     <div class="row">
         @foreach (var entry in Model.OrderByDescending(e => e.EntryDate))
         {
@@ -54,28 +53,6 @@ else
                     <div class="card-footer">
                         <div class="d-flex gap-2">
                             <a asp-action="Details" asp-controller="Entries" asp-route-id="@entry.Id" class="btn btn-sm btn-primary">View</a>
-                            <a asp-action="Edit" asp-controller="Entries" asp-route-id="@entry.Id" class="btn btn-sm btn-warning">Edit</a>
-                            <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal-@entry.Id">Delete</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="modal fade" id="deleteModal-@entry.Id" tabindex="-1" aria-labelledby="deleteModalLabel-@entry.Id" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="deleteModalLabel-@entry.Id">Confirm Delete</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            Are you sure you want to delete the entry from <strong>@entry.EntryDate.ToString("MMMM dd, yyyy")</strong>?
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                            <form asp-action="Delete" asp-controller="Entries" asp-route-id="@entry.Id" method="post" class="d-inline">
-                                <button type="submit" class="btn btn-danger">Delete</button>
-                            </form>
                         </div>
                     </div>
                 </div>

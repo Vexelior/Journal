@@ -8,46 +8,37 @@
 }
 
 <div class="mb-3">
-    <a asp-action="EntriesByJournalId" asp-controller="Entries" asp-route-id="@journalId" class="btn btn-secondary">Back to Entries</a>
+    <a asp-action="EntriesByJournalId" asp-controller="Entries" asp-route-id="@journalId" class="btn btn-sm btn-secondary">Back to Entries</a>
 </div>
 
 <div class="row">
     <div class="col-md-8">
         <h1>Create New Entry</h1>
         <hr />
-
         <form asp-action="Create" asp-controller="Entries" method="post">
-            <input type="hidden" name="journalId" value="@journalId" />
-
+            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+            <input type="hidden" asp-for="JournalId" value="@journalId" />
             <div class="mb-3">
-                <label for="entryDate" class="form-label">Entry Date</label>
-                <input type="date" class="form-control" id="entryDate" name="entryDate" value="@DateTime.Now.ToString("yyyy-MM-dd")" required />
+                <label asp-for="EntryDate" class="form-label">Entry Date</label>
+                <input asp-for="EntryDate" type="date" class="form-control" value="@DateTime.Now.ToString("yyyy-MM-dd")" required />
+                <span asp-validation-for="EntryDate" class="text-danger"></span>
             </div>
-
             <div class="mb-3">
-                <label for="promptId" class="form-label">Prompt</label>
-                <select class="form-select" id="promptId" name="promptId">
-                    <option value="">-- Select a prompt or write freely --</option>
-                    @if (prompts != null)
-                    {
-                        @foreach (var item in prompts)
-                        {
-                            <option value="@item.Value">@item.Text</option>
-                        }
-                    }
+                <label asp-for="PromptId" class="form-label">Prompt</label>
+                <select asp-for="PromptId" class="form-select" asp-items="prompts">
+                    <option value="">-- Select a prompt --</option>
                 </select>
-                <div class="form-text">Choose a writing prompt or leave blank for free writing.</div>
+                <div class="form-text">Choose a writing prompt.</div>
+                <span asp-validation-for="PromptId" class="text-danger"></span>
             </div>
-
             <div class="mb-3">
-                <label for="content" class="form-label">Content</label>
-                <textarea class="form-control" id="content" name="content" rows="15" placeholder="Write your journal entry here..." required></textarea>
+                <label asp-for="Content" class="form-label">Content</label>
+                <textarea asp-for="Content" class="form-control" rows="15" placeholder="Write your journal entry here..." required></textarea>
                 <span asp-validation-for="Content" class="text-danger"></span>
             </div>
-
             <div class="d-flex gap-2">
-                <button type="submit" class="btn btn-primary">Save Entry</button>
-                <a asp-action="EntriesByJournalId" asp-controller="Entries" asp-route-id="@journalId" class="btn btn-secondary">Cancel</a>
+                <button type="submit" class="btn btn-sm btn-primary">Save Entry</button>
+                <a asp-action="EntriesByJournalId" asp-controller="Entries" asp-route-id="@journalId" class="btn btn-sm btn-secondary">Cancel</a>
             </div>
         </form>
     </div>

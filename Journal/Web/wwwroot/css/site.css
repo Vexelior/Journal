@@ -27,12 +27,20 @@ body {
     margin-bottom: 60px;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
     font-family: var(--header-font);
     color: var(--text-color);
 }
 
-p, li, span, div {
+p,
+li,
+span,
+div {
     font-family: var(--body-font);
     color: var(--text-color);
 }
@@ -47,7 +55,7 @@ p, li, span, div {
 }
 
 .btn-primary:hover {
-    background-color: #45a049;
+    background-color: var(--primary-color);
 }
 
 .btn-secondary {
@@ -60,7 +68,7 @@ p, li, span, div {
 }
 
 .btn-secondary:hover {
-    background-color: #e68a00;
+    background-color: var(--secondary-color);
 }
 
 form input[type="text"],
@@ -82,7 +90,7 @@ form input[type="password"]:hover,
 form input[type="email"]:hover,
 form select:hover,
 form textarea:hover {
-    border-color: #45a049;
+    border-color: var(--primary-color);
 }
 
 form input[type="text"]:focus,
@@ -90,44 +98,56 @@ form input[type="password"]:focus,
 form input[type="email"]:focus,
 form select:focus,
 form textarea:focus {
-    border-color: #4CAF50;
-    box-shadow: 0 0 8px 0 #4CAF50;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 8px 0 var(--primary-color);
     outline: none;
 }
 
-/*make form buttons the same as all the other buttons*/
-form .btn {
-    width: auto !important;
-    margin-top: 0 !important;
-    padding: 0.35rem !important;
+form:not(#logoutForm) > button[type="submit"] {
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
 }
 
 .dropdown-submenu {
     position: relative;
 }
 
-    .dropdown-submenu .dropdown-menu {
-        top: 0;
-        left: 100%;
-        margin-top: -1px;
-        margin-left: 0;
-    }
+.dropdown-submenu .dropdown-menu {
+    top: 0;
+    left: 100%;
+    margin-top: -1px;
+    margin-left: 0;
+}
 
-    .dropdown-submenu:hover > .dropdown-menu {
-        display: block;
-    }
-
-    .dropdown-submenu > .dropdown-toggle::after {
-        transform: rotate(-90deg);
-        right: 1rem;
-        position: absolute;
-        top: 0.9rem;
-    }
-
-.dropdown:hover > .dropdown-menu {
+.dropdown-submenu:hover>.dropdown-menu {
     display: block;
 }
 
-.dropdown > .dropdown-toggle:active {
+.dropdown-submenu>.dropdown-toggle::after {
+    transform: rotate(-90deg);
+    right: 1rem;
+    position: absolute;
+    top: 0.9rem;
+}
+
+.dropdown:hover>.dropdown-menu {
+    display: block;
+}
+
+.dropdown>.dropdown-toggle:active {
     pointer-events: none;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+a.btn {
+    text-decoration: none;
+    vertical-align: middle;
 }

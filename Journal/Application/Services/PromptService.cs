@@ -33,7 +33,8 @@ public class PromptService(IPromptRepository promptRepository)
 
     public async Task DeleteAsync(Prompt prompt)
     {
-        await promptRepository.Delete(prompt);
+        prompt.IsActive = false;
+        await promptRepository.Update(prompt);
     }
 
     public async Task<IEnumerable<Prompt>> GetPromptsByJournalId(int id)

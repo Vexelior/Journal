@@ -7,13 +7,14 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 namespace Web.Controllers;
 
 [Authorize(Roles = "Admin")]
-public class EntriesController(EntriesService service, PromptService promptService) : Controller
+public class EntriesController(EntriesService service, PromptService promptService, JournalService journalService) : Controller
 {
     public async Task<IActionResult> EntriesByJournalId(int id)
     {
-        ViewBag.JournalId = id;
         var entries = await service.GetEntriesByJournalIdAsync(id);
-        // get the prompts for each entry
+        var journal = await journalService.GetByIdAsync(id);
+        ViewBag.Journal = journal;
+
         foreach (var entry in entries)
         {
             var prompt = await promptService.GetByIdAsync(entry.PromptId);
@@ -23,6 +24,7 @@ public class EntriesController(EntriesService service, PromptService promptServi
                 ViewBag.Prompts[prompt.Id] = prompt;
             }
         }
+
         return View(entries);
     }
 
@@ -34,44 +36,36 @@ public class EntriesController(EntriesService service, PromptService promptServi
         }
 
         ViewBag.JournalId = journalId;
-        
+
         var prompts = await promptService.GetAllActiveAsync();
         ViewBag.Prompts = new SelectList(prompts, "Id", "Text");
-        
+
         return View();
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(int journalId, DateTime entryDate, int? promptId, string content)
+    public async Task<IActionResult> Create(int journalId, DateTime entryDate, int promptId, string content)
     {
-        if (journalId <= 0)
+        if (ModelState.IsValid)
         {
-            return BadRequest("Invalid journal ID.");
+            var entry = new JournalEntry
+            {
+                JournalId = journalId,
+                EntryDate = entryDate,
+                PromptId = promptId,
+                Content = content,
+                CreatedAt = DateTime.Now
+            };
+
+            await service.AddAsync(entry);
+            return RedirectToAction("EntriesByJournalId", new { id = journalId });
         }
 
-        if (string.IsNullOrWhiteSpace(content))
-        {
-            ModelState.AddModelError("content", "Content is required.");
-            ViewBag.JournalId = journalId;
-            
-            var prompts = await promptService.GetAllActiveAsync();
-            ViewBag.Prompts = new SelectList(prompts, "Id", "Text");
-            
-            return View();
-        }
-
-        var entry = new JournalEntry
-        {
-            JournalId = journalId,
-            EntryDate = entryDate,
-            PromptId = promptId ?? 0,
-            Content = content,
-            CreatedAt = DateTime.Now
-        };
-
-        await service.AddAsync(entry);
-        return RedirectToAction("EntriesByJournalId", new { id = journalId });
+        ViewBag.JournalId = journalId;
+        var prompts = await promptService.GetAllActiveAsync();
+        ViewBag.Prompts = new SelectList(prompts, "Id", "Text", promptId);
+        return View();
     }
 
     public async Task<IActionResult> Details(int id)

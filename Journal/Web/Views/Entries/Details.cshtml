@@ -5,7 +5,7 @@
 }
 
 <div class="mb-3">
-    <a asp-action="EntriesByJournalId" asp-controller="Entries" asp-route-id="@Model.JournalId" class="btn btn-secondary">Back to Entries</a>
+    <a asp-action="EntriesByJournalId" asp-controller="Entries" asp-route-id="@Model.JournalId" class="btn btn-sm btn-secondary">Back to Entries</a>
 </div>
 
 <div class="row">
@@ -45,6 +45,28 @@
                     <label class="form-label fw-bold">Content</label>
                     <div class="border rounded p-3 bg-light" style="white-space: pre-wrap;">@Model.Content</div>
                 </div>
+                <a asp-action="Edit" asp-controller="Entries" asp-route-id="@Model.Id" class="btn btn-sm btn-warning">Edit</a>
+                <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete the entry from <strong>@Model.EntryDate.ToString("MMMM dd, yyyy")</strong>?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form asp-action="Delete" asp-controller="Entries" asp-route-id="@Model.Id" method="post" class="d-inline">
+                    <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                </form>
             </div>
         </div>
     </div>
