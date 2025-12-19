@@ -21,7 +21,7 @@
         </p>
         
         <div class="d-flex gap-2 mt-3">
-            <a asp-action="Entries" asp-controller="Journal" asp-route-id="@Model.Id" class="btn btn-primary">
+            <a asp-action="EntriesByJournalId" asp-controller="Entries" asp-route-id="@Model.Id" class="btn btn-primary">
                 View Entries
             </a>
             <a asp-action="Edit" asp-controller="Journal" asp-route-id="@Model.Id" class="btn btn-warning">

@@ -19,7 +19,10 @@ builder.Services.AddControllersWithViews();
 
 // Services \\
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+builder.Services.AddScoped<IEntriesRepository, EntriesRepository>();
+
 builder.Services.AddScoped<JournalService>();
+builder.Services.AddScoped<EntriesService>();
 
 var app = builder.Build();
 
