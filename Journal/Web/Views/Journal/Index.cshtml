@@ -22,9 +22,7 @@
                         </div>
                         @if (item.JournalEntries.Any())
                         {
-                            <hr class="my-3" />
                             <div class="d-flex flex-column gap-2">
-                                <h6 class="mb-2">Export Options:</h6>
                                 <div class="btn-group" role="group">
                                     <a asp-action="ExportText" asp-controller="Journal" asp-route-id="@item.Id" class="btn btn-outline-secondary btn-sm">
                                         <i class="bi bi-file-text"></i> Export as Text
