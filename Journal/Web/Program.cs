@@ -24,6 +24,8 @@ builder.Services.AddScoped<IEntriesRepository, EntriesRepository>();
 builder.Services.AddScoped<JournalService>();
 builder.Services.AddScoped<EntriesService>();
 builder.Services.AddScoped<PromptService>();
+builder.Services.AddScoped<JournalExportService>();
+builder.Services.AddScoped<DocumentExportService>();
 
 var app = builder.Build();
 
