@@ -50,18 +50,6 @@ else
                     </div>
                     <div class="card-body">
                         <h6 class="card-subtitle mb-2 text-muted">Prompt: @entry.Prompt?.Text</h6>
-                        <p class="card-text">
-                            @if (entry.Content.Length > 150)
-                            {
-                                @(entry.Content.Substring(0, 150))
-
-                                @:...
-                            }
-                            else
-                            {
-                                @entry.Content
-                            }
-                        </p>
                     </div>
                     <div class="card-footer">
                         <div class="d-flex gap-2">
