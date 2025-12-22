@@ -43,7 +43,7 @@
 
                 <div class="mb-3">
                     <label class="form-label fw-bold">Content</label>
-                    <div class="border rounded p-3 bg-light" style="white-space: pre-wrap;">@Model.Content</div>
+                    <div class="border rounded p-3 bg-light" style="white-space: pre-wrap;">@Html.Raw(Model.Content)</div>
                 </div>
                 <a asp-action="Edit" asp-controller="Entries" asp-route-id="@Model.Id" class="btn btn-sm btn-warning">Edit</a>
                 <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
