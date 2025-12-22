@@ -4,9 +4,19 @@ using Infrastructure.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Infrastructure.Repository;
+using Serilog;
+using Web.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true);
+builder.Host.UseSerilog((context, services, configuration) => configuration
+    .ReadFrom.Configuration(context.Configuration)
+    .ReadFrom.Services(services)
+    .Enrich.FromLogContext()
+);
+
+Log.Information("Starting up the application...");
+Log.Information("Environment: {EnvironmentName}", builder.Environment.EnvironmentName);
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
@@ -55,6 +65,8 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Exception/{exception}");
     app.UseHsts();
 }
+
+app.UseRequestLogging();
 
 app.UseStatusCodePagesWithReExecute("/Error/{0}");
 app.UseExceptionHandler("/Exception/{exception}");
