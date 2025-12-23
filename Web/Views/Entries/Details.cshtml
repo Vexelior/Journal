@@ -16,8 +16,16 @@
         <hr />
 
         <div class="card">
-            <div class="card-header">
+            <div class="card-header d-flex justify-content-between align-items-center">
                 <strong>@Model.EntryDate.ToString("dddd, MMMM dd, yyyy")</strong>
+                <div>
+                    <a asp-action="Edit" asp-controller="Entries" asp-route-id="@Model.Id" class="btn btn-sm btn-warning" title="Edit">
+                        <i class="bi bi-pencil"></i>
+                    </a>
+                    <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" title="Delete">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </div>
             </div>
             <div class="card-body">
                 <div class="row">
@@ -47,12 +55,6 @@
                     <label class="form-label fw-bold">Content</label>
                     <div class="border rounded p-3 bg-light" style="white-space: pre-wrap;">@Html.Raw(Model.Content)</div>
                 </div>
-                <a asp-action="Edit" asp-controller="Entries" asp-route-id="@Model.Id" class="btn btn-sm btn-warning" title="Edit">
-                    <i class="bi bi-pencil"></i>
-                </a>
-                <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" title="Delete">
-                    <i class="bi bi-trash"></i>
-                </button>
             </div>
         </div>
     </div>
@@ -70,7 +72,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <form asp-action="Delete" asp-controller="Entries" asp-route-id="@Model.Id" method="post" class="d-inline">
+                <form asp-action="Delete" asp-controller="Entries" asp-route-id="@Model.Id" id="modal-delete-form" method="post" class="d-inline">
                     <button type="submit" class="btn btn-sm btn-danger">Delete</button>
                 </form>
             </div>

@@ -35,7 +35,7 @@
                                 </a>
                             </td>
                             <td>
-                                <form asp-action="ToggleActive" asp-controller="Prompt" asp-route-id="@prompt.Id" method="post" class="d-inline">
+                                <form asp-action="ToggleActive" asp-controller="Prompt" asp-route-id="@prompt.Id" id="irregular-delete-form" method="post" class="d-inline">
                                     <button type="submit" class="btn btn-sm btn-link p-0 border-0" title="@(prompt.IsActive ? "Deactivate" : "Activate")">
                                         @if (prompt.IsActive)
                                         {

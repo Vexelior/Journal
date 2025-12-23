@@ -55,7 +55,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <form asp-action="Delete" asp-controller="Journal" asp-route-id="@Model.Id" method="post" class="d-inline">
+                <form asp-action="Delete" asp-controller="Journal" asp-route-id="@Model.Id" id="modal-delete-form" method="post" class="d-inline">
                     <button type="submit" class="btn btn-danger">Delete</button>
                 </form>
             </div>

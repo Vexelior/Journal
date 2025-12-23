@@ -109,7 +109,7 @@ public class EntriesController(EntriesService service, PromptService promptServi
         entry.EntryDate = entryDate;
         entry.Content = content;
         await service.UpdateAsync(entry);
-        return RedirectToAction("EntriesByJournalId", new { id = entry.JournalId });
+        return RedirectToAction(nameof(Details), new { id = entry.Id });
     }
 
     [HttpPost]
