@@ -480,22 +480,14 @@ For issues, questions, or suggestions:
 
 ### Version 2.0 (Planned)
 
-- [ ] User-specific journals (multi-user support)
 - [x] Rich text editor with formatting
 - [x] Image attachments in entries
 - [ ] Search and filter functionality
-- [ ] Tags and categories
-- [ ] Journal sharing capabilities
-- [ ] Mobile-responsive improvements
 
 ### Version 2.1 (Planned)
 
-- [ ] REST API for mobile apps
 - [ ] Entry reminders/notifications
 - [ ] Journal statistics and insights
-- [ ] Export to additional formats (Word, Markdown)
-- [ ] Journal templates
-- [ ] Mood tracking integration
 
 ### Version 3.0 (Future)
 
