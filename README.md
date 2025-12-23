@@ -481,8 +481,8 @@ For issues, questions, or suggestions:
 ### Version 2.0 (Planned)
 
 - [ ] User-specific journals (multi-user support)
-- [ ] Rich text editor with formatting
-- [ ] Image attachments in entries
+- [x] Rich text editor with formatting
+- [x] Image attachments in entries
 - [ ] Search and filter functionality
 - [ ] Tags and categories
 - [ ] Journal sharing capabilities
@@ -501,9 +501,6 @@ For issues, questions, or suggestions:
 
 - [ ] AI-powered writing suggestions
 - [ ] Voice-to-text entry creation
-- [ ] Collaboration features
-- [ ] Cloud synchronization
-- [ ] Offline mobile app
 
 ---
 
