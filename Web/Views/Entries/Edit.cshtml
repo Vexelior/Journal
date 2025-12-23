@@ -7,7 +7,9 @@
 }
 
 <div class="mb-3">
-    <a asp-action="EntriesByJournalId" asp-controller="Entries" asp-route-id="@Model.JournalId" class="btn btn-sm btn-secondary">Back to Entries</a>
+    <a asp-action="EntriesByJournalId" asp-controller="Entries" asp-route-id="@Model.JournalId" class="btn btn-sm btn-secondary">
+        <i class="bi bi-arrow-left me-1"></i> Entries
+    </a>
 </div>
 
 <div class="row">
@@ -50,7 +52,9 @@
             }
 
             <div class="d-flex gap-2">
-                <button type="submit" class="btn btn-sm btn-primary">Save Changes</button>
+                <button type="submit" class="btn btn-sm btn-primary">
+                    <i class="bi bi-floppy me-1"></i> Save
+                </button>
                 <a asp-action="Details" asp-controller="Entries" asp-route-id="@Model.Id" class="btn btn-sm btn-secondary">Cancel</a>
             </div>
         </form>

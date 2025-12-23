@@ -8,7 +8,9 @@
 <div class="mb-3">
     @if (journal != null)
     {
-        <a asp-action="Details" asp-controller="Journal" asp-route-id="@journal.Id" class="btn btn-sm btn-secondary">Back to Journal</a>
+        <a asp-action="Index" asp-controller="Journal" asp-route-id="@journal.Id" class="btn btn-sm btn-secondary" title="Back to Journals">
+            <i class="bi bi-arrow-left me-1"></i>Journal
+        </a>
     }
     else
     {
@@ -38,12 +40,13 @@
 }
 else
 {
-    <a asp-action="Create" asp-controller="Entries" asp-route-journalId="@journal?.Id" class="btn btn-sm btn-primary mb-3">Add Entry</a>
+    <a asp-action="Create" asp-controller="Entries" asp-route-journalId="@journal?.Id" class="btn btn-sm btn-primary mb-3" title="New Entry">
+        <i class="bi bi-plus me-1"></i> Entry
+    </a>
 
-    var entriesByDate = Model
-        .OrderByDescending(e => e.EntryDate)
-        .GroupBy(e => e.EntryDate.Date)
-        .ToList();
+    var entriesByDate = Model.OrderByDescending(e => e.EntryDate)
+                             .GroupBy(e => e.EntryDate.Date)
+                             .ToList();
     var firstGroup = true;
 
     <div class="accordion" id="entriesAccordion">
@@ -66,16 +69,13 @@ else
                             @foreach (var entry in dateGroup)
                             {
                                 <div class="col-md-6 col-lg-4 mb-3">
-                                    <div class="card h-100">
-                                        <div class="card-body">
-                                            <h6 class="card-subtitle mb-2 text-muted">Prompt: @entry.Prompt?.Text</h6>
-                                        </div>
-                                        <div class="card-footer">
-                                            <div class="d-flex gap-2">
-                                                <a asp-action="Details" asp-controller="Entries" asp-route-id="@entry.Id" class="btn btn-sm btn-primary">View</a>
+                                    <a asp-action="Details" asp-controller="Entries" asp-route-id="@entry.Id" class="text-decoration-none" title="View">
+                                        <div class="card h-100">
+                                            <div class="card-body">
+                                                <h6 class="card-subtitle mb-2 text-muted">Prompt: @entry.Prompt?.Text</h6>
                                             </div>
                                         </div>
-                                    </div>
+                                    </a>
                                 </div>
                             }
                         </div>

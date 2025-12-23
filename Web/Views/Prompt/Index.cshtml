@@ -8,7 +8,9 @@
     <div class="col-12 mb-3">
         <div class="d-flex justify-content-between align-items-center">
             <h1>Journal Prompts</h1>
-            <a asp-action="Create" asp-controller="Prompt" class="btn btn-sm btn-secondary">New Prompt</a>
+            <a asp-action="Create" asp-controller="Prompt" class="btn btn-sm btn-secondary">
+                <i class="bi bi-plus me-1"></i> Prompt
+            </a>
         </div>
         <hr />
     </div>
@@ -17,7 +19,7 @@
         <div class="col-12 table-responsive">
             <table class="table table-hover">
                 <thead>
-                    <tr>
+                    <tr class="table-secondary">
                         <th>Text</th>
                         <th>Status</th>
                         <th>Created</th>

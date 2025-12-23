@@ -6,7 +6,9 @@
 }
 
 <div class="mb-3">
-    <a asp-action="Index" asp-controller="Journal" class="btn btn-sm btn-secondary">Back to Journals</a>
+    <a asp-action="Index" asp-controller="Journal" class="btn btn-sm btn-secondary" title="Back to Journals">
+        <i class="bi bi-arrow-left me-1"></i>Journals
+    </a>
 </div>
 
 <div class="card col-md-6">
@@ -19,16 +21,16 @@
             <br />
             <strong>Entries:</strong> @Model.JournalEntries.Count
         </p>
-        
+
         <div class="d-flex gap-2 mt-3">
-            <a asp-action="EntriesByJournalId" asp-controller="Entries" asp-route-id="@Model.Id" class="btn btn-sm btn-primary">
-                View Entries
+            <a asp-action="EntriesByJournalId" asp-controller="Entries" asp-route-id="@Model.Id" class="btn btn-sm btn-primary" title="View Entries">
+                <i class="bi bi-eye"></i>
             </a>
-            <a asp-action="Edit" asp-controller="Journal" asp-route-id="@Model.Id" class="btn btn-sm btn-warning">
-                Edit
+            <a asp-action="Edit" asp-controller="Journal" asp-route-id="@Model.Id" class="btn btn-sm btn-warning" title="Edit Jounral">
+                <i class="bi bi-pencil"></i>
             </a>
-            <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
-                Delete
+            <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" title="Delete Journal">
+                <i class="bi bi-trash"></i>
             </button>
         </div>
     </div>
@@ -45,7 +47,9 @@
                 Are you sure you want to delete the journal for <strong>@CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(Model.Month), @Model.Year</strong>?
                 @if (Model.JournalEntries.Count > 0)
                 {
-                    <br /><br />
+                    <br />
+                
+                    <br />
                     <span class="text-danger">This will also delete @Model.JournalEntries.Count entr@(Model.JournalEntries.Count == 1 ? "y" : "ies").</span>
                 }
             </div>
