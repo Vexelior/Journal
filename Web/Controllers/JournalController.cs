@@ -7,7 +7,7 @@ using System.Globalization;
 namespace Web.Controllers;
 
 [Authorize(Roles = "Admin")]
-public class JournalController(JournalService journalService, PromptService promptService, EntriesService entriesService, JournalExportService exportService, DocumentExportService documentService) : Controller
+public class JournalController(JournalService journalService, DocumentExportService documentService) : Controller
 {
     public async Task<IActionResult> Index()
     {

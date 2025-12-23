@@ -15,6 +15,8 @@ builder.Host.UseSerilog((context, services, configuration) => configuration
     .Enrich.FromLogContext()
 );
 
+builder.WebHost.UseStaticWebAssets();
+
 Log.Information("Starting up the application...");
 Log.Information("Environment: {EnvironmentName}", builder.Environment.EnvironmentName);
 
@@ -71,12 +73,13 @@ app.UseRequestLogging();
 app.UseStatusCodePagesWithReExecute("/Error/{0}");
 app.UseExceptionHandler("/Exception/{exception}");
 
+app.MapStaticAssets();
+
 app.UseHttpsRedirection();
+
 app.UseRouting();
 
 app.UseAuthorization();
-
-app.MapStaticAssets();
 
 app.MapControllerRoute(
     name: "default",

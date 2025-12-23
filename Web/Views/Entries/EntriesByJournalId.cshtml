@@ -1,0 +1,89 @@
+﻿@using Domain.Models
+@model IEnumerable<JournalEntry>
+@{
+    ViewData["Title"] = "Journal Entries";
+    var journal = ViewBag.Journal as Journal;
+}
+
+<div class="mb-3">
+    @if (journal != null)
+    {
+        <a asp-action="Details" asp-controller="Journal" asp-route-id="@journal.Id" class="btn btn-sm btn-secondary">Back to Journal</a>
+    }
+    else
+    {
+        <a asp-action="Index" asp-controller="Journal" class="btn btn-sm btn-secondary">Back to Journals</a>
+    }
+</div>
+
+<div class="row">
+    <div class="col-12">
+        @if (journal != null)
+        {
+            <h1>Entries for @System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(journal.Month), @journal.Year</h1>
+        }
+        else
+        {
+            <h1>Journal Entries</h1>
+        }
+        <hr />
+    </div>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info" role="alert">
+        No entries found for this journal. <a asp-action="Create" asp-controller="Entries" asp-route-journalId="@journal?.Id" class="alert-link">Create your first entry</a>
+    </div>
+}
+else
+{
+    <a asp-action="Create" asp-controller="Entries" asp-route-journalId="@journal?.Id" class="btn btn-sm btn-primary mb-3">Add Entry</a>
+
+    var entriesByDate = Model
+        .OrderByDescending(e => e.EntryDate)
+        .GroupBy(e => e.EntryDate.Date)
+        .ToList();
+    var firstGroup = true;
+
+    <div class="accordion" id="entriesAccordion">
+        @foreach (var dateGroup in entriesByDate)
+        {
+            var collapseId = $"collapse{dateGroup.Key:yyyyMMdd}";
+            var headingId = $"heading{dateGroup.Key:yyyyMMdd}";
+            var entryCount = dateGroup.Count();
+
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="@headingId">
+                    <button class="accordion-button @(firstGroup ? "" : "collapsed")" type="button" data-bs-toggle="collapse" data-bs-target="#@collapseId" aria-expanded="@(firstGroup ? "true" : "false")" aria-controls="@collapseId">
+                        <strong>@dateGroup.Key.ToString("dddd, MMMM dd, yyyy")</strong>
+                        <span class="badge bg-secondary ms-2">@entryCount @(entryCount == 1 ? "entry" : "entries")</span>
+                    </button>
+                </h2>
+                <div id="@collapseId" class="accordion-collapse collapse @(firstGroup ? "show" : "")" aria-labelledby="@headingId" data-bs-parent="#entriesAccordion">
+                    <div class="accordion-body">
+                        <div class="row">
+                            @foreach (var entry in dateGroup)
+                            {
+                                <div class="col-md-6 col-lg-4 mb-3">
+                                    <div class="card h-100">
+                                        <div class="card-body">
+                                            <h6 class="card-subtitle mb-2 text-muted">Prompt: @entry.Prompt?.Text</h6>
+                                        </div>
+                                        <div class="card-footer">
+                                            <div class="d-flex gap-2">
+                                                <a asp-action="Details" asp-controller="Entries" asp-route-id="@entry.Id" class="btn btn-sm btn-primary">View</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            firstGroup = false;
+        }
+    </div>
+}

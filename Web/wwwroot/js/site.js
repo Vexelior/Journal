@@ -1,4 +1,17 @@
 ﻿document.addEventListener('DOMContentLoaded', function () {
+    //$('#summernote').summernote({
+    //    height: 300,
+    //    placeholder: 'Write your journal entry here...',
+    //    toolbar: [
+    //        ['style', ['style']],
+    //        ['font', ['bold', 'underline', 'clear']],
+    //        ['color', ['color']],
+    //        ['para', ['ul', 'ol', 'paragraph']],
+    //        ['table', ['table']],
+    //        ['insert', ['link']],
+    //        ['view', ['fullscreen', 'codeview', 'help']]
+    //    ]
+    //});
     document.querySelectorAll('.dropdown-submenu > .dropdown-toggle').forEach(function (element) {
         element.addEventListener('click', function (e) {
             e.preventDefault();

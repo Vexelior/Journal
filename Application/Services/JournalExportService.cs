@@ -1,12 +1,10 @@
-﻿using System;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Text;
-using Application.Repository;
 using Domain.Models;
 
 namespace Application.Services;
 
-public class JournalExportService(IRepository<Journal> journalRepository)
+public class JournalExportService
 {
     public byte[] GenerateTextExport(Journal journal)
     {
