@@ -1,11 +1,11 @@
 @font-face {
     font-family: 'Space Mono';
-    src: url('/fonts/Space_Mono/SpaceMono-Bold.ttf');
+    src: url('/fonts/SpaceMono/SpaceMono.ttf');
 }
 
 @font-face {
     font-family: 'Plus Jakarta Sans';
-    src: url('/fonts/Plus_Jakarta_Sans/PlusJakartaSans-VariableFont_wght.ttf');
+    src: url('/fonts/JakartaSans/JakartaSans.ttf');
 }
 
 :root {
