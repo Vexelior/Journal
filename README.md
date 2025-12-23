@@ -1,7 +1,3 @@
-# Journal
-
-A full-featured digital journaling application built with ASP.NET Core MVC and Entity Framework Core, designed to help users organize and maintain their daily journal entries with customizable prompts.
-
 ## Table of Contents
 
 - [Overview](#overview)
