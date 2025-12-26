@@ -1,4 +1,21 @@
 ﻿document.addEventListener('DOMContentLoaded', function () {
+    var submitButton = this.querySelectorAll('[type="submit"]');
+    if (!submitButton || submitButton.length === 0) {
+        return;
+    }
+    submitButton.forEach(function (button) {
+        button.addEventListener('click', function () {
+            var form = this.closest('form:not(#logoutForm)');
+            if (form) {
+                if (form.reportValidity()) {
+                    this.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Submitting...';
+                    this.disabled = true;
+                    this.form.submit();
+                }
+            }
+        });
+    });
+
     $('#summernote').summernote({
         height: 300,
         placeholder: 'Write your journal entry here...',
