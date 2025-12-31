@@ -93,12 +93,16 @@
     {
         if (!string.IsNullOrEmpty(search))
         {
-            <div class="alert alert-info">No journals found for search '@search'.</div>
+            <div class="col-12 mt-2">
+                <div class="alert alert-info">No journals found for search '@search'.</div>
+            </div>
 
         }
         else
         {
-            <div class="alert alert-info">No journals found. <a asp-action="Create" asp-controller="Journal">Create a new journal</a>.</div>
+            <div class="col-12 mt-2">
+                <div class="alert alert-info">No journals found. <a asp-action="Create" asp-controller="Journal">Create a new journal</a>.</div>
+            </div>
         }
     }
 </div>
