@@ -3,6 +3,9 @@
 @model IEnumerable<Journal>
 @{
     ViewData["Title"] = "Journals";
+    var currentPage = ViewBag.CurrentPage ?? 1;
+    var totalPages = ViewBag.TotalPages ?? 1;
+    var search = Context.Request.Query["search"].ToString();
 }
 <div class="row mt-2">
     <div class="col-12 mb-3">
@@ -14,11 +17,23 @@
         </div>
         <hr />
     </div>
+    <div class="col-12">
+        <form asp-action="Index" asp-controller="Journal" method="get" class="row g-2" id="search-form">
+            <div class="col-auto align-self-center flex-grow-1">
+                <input type="text" name="search" value="@search" class="form-control mb-1" placeholder="Search..." />
+            </div>
+            <div class="col-auto align-self-center">
+                <button type="submit" class="btn btn-primary" title="Search">
+                    <i class="bi bi-search"></i>
+                </button>
+            </div>
+        </form>
+    </div>
     @if (Model.Any())
     {
         @foreach (var item in Model)
         {
-            <div class="col-md-4 mb-3">
+            <div class="col-md-4 mb-3 mt-2">
                 <div class="card h-100">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center mb-2">
@@ -48,9 +63,42 @@
                 </div>
             </div>
         }
+        @if (totalPages > 1)
+        {
+            <div class="col-12">
+                <nav aria-label="Journal pagination">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item @(currentPage == 1 ? "disabled" : "")">
+                            <a class="page-link" asp-action="Index" asp-controller="Journal" asp-route-page="@(currentPage - 1)" asp-route-search="@search">
+                                <i class="bi bi-chevron-left"></i>
+                            </a>
+                        </li>
+                        @for (int i = 1; i <= totalPages; i++)
+                        {
+                            <li class="page-item @(i == currentPage ? "active" : "")">
+                                <a class="page-link" asp-action="Index" asp-controller="Journal" asp-route-page="@i" asp-route-search="@search">@i</a>
+                            </li>
+                        }
+                        <li class="page-item @(currentPage == totalPages ? "disabled" : "")">
+                            <a class="page-link" asp-action="Index" asp-controller="Journal" asp-route-page="@(currentPage + 1)" asp-route-search="@search">
+                                <i class="bi bi-chevron-right"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        }
     }
     else
     {
-        <div class="alert alert-info">No journals found. <a asp-action="Create" asp-controller="Journal">Create a new journal</a>.</div>
+        if (!string.IsNullOrEmpty(search))
+        {
+            <div class="alert alert-info">No journals found for search '@search'.</div>
+
+        }
+        else
+        {
+            <div class="alert alert-info">No journals found. <a asp-action="Create" asp-controller="Journal">Create a new journal</a>.</div>
+        }
     }
 </div>

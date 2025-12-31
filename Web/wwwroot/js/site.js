@@ -5,10 +5,14 @@
     }
     submitButton.forEach(function (button) {
         button.addEventListener('click', function () {
+            var buttonWidth = this.offsetWidth;
+            this.style.width = buttonWidth + 'px';
+            var buttonHeight = this.offsetHeight;
+            this.style.height = buttonHeight + 'px';
             var form = this.closest('form:not(#logoutForm)');
             if (form) {
                 if (form.reportValidity()) {
-                    this.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Submitting...';
+                    this.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>';
                     this.disabled = true;
                     this.form.submit();
                 }

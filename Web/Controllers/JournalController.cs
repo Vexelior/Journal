@@ -9,7 +9,7 @@ namespace Web.Controllers;
 [Authorize(Roles = "Admin")]
 public class JournalController(JournalService journalService, DocumentExportService documentService) : Controller
 {
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(string search, int page = 1, int pageSize = 9)
     {
         var journals = await journalService.GetAllAsync();
         var fullJournals = new List<Journal>();
@@ -21,7 +21,17 @@ public class JournalController(JournalService journalService, DocumentExportServ
                 fullJournals.Add(fullJournal);
             }
         }
-        return View(fullJournals);
+        if (!string.IsNullOrEmpty(search))
+        {
+            fullJournals = [.. fullJournals.Where(j => CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(j.Month)
+                                           .Contains(search, StringComparison.OrdinalIgnoreCase) || j.Year.ToString().Contains(search))];
+        }
+        var pagedJournals = fullJournals.Skip((page - 1) * pageSize)
+                                        .Take(pageSize)
+                                        .ToList();
+        ViewBag.CurrentPage = page;
+        ViewBag.TotalPages = (int)Math.Ceiling((double)fullJournals.Count / pageSize);
+        return View(pagedJournals);
     }
 
     public IActionResult Create()

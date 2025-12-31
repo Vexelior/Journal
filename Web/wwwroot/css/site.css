@@ -70,9 +70,10 @@ div {
 
 .btn-secondary:hover {
     background-color: var(--secondary-color);
+    opacity: 0.9;
 }
 
-form:not(#logoutForm, #modal-delete-form, #irregular-delete-form) {
+form:not(#logoutForm, #modal-delete-form, #irregular-delete-form, #search-form) {
     background-color: white;
     padding: 20px;
     border-radius: 5px;
@@ -166,4 +167,43 @@ form:not(#logoutForm)>button[type="submit"] {
 a.btn {
     text-decoration: none;
     vertical-align: middle;
+}
+
+a:focus {
+    text-decoration: none;
+    color: white !important;
+    outline: none;
+}
+
+.active .page-link {
+    background-color: var(--primary-color);
+    color: white;
+    border-color: transparent !important;
+}
+
+.page-link {
+    color: var(--primary-color);
+}
+
+.page-link:hover {
+    color: white;
+    background-color: var(--secondary-color);
+    border-color: transparent !important;
+}
+
+.active .page-link:hover {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.page-link:focus {
+    box-shadow: none;
+    background-color: var(--secondary-color) !important;
+    color: white !important;
+}
+
+.btn-primary:disabled {
+    box-shadow: none !important;
+    outline: none !important;
+    background-color: var(--primary-color) !important;
 }
