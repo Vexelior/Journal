@@ -9,13 +9,24 @@ public class EntriesRepository(ApplicationDbContext context) : Repository<Journa
 {
     private readonly ApplicationDbContext _context = context;
 
-    public async Task<IEnumerable<JournalEntry>> GetEntriesByJournalIdAsync(int journalId)
+    public async Task<IEnumerable<JournalEntry>> GetEntriesByJournalIdAsync(int journalId, string userId)
     {
-        return await _context.JournalEntries.Where(entry => entry.JournalId == journalId).ToListAsync();
+        return await _context.JournalEntries
+            .Where(entry => entry.JournalId == journalId && entry.UserId == userId)
+            .ToListAsync();
     }
 
-    public async Task<IEnumerable<JournalEntry>> GetJournalEntriesByPromptIdAsync(int promptId)
+    public async Task<IEnumerable<JournalEntry>> GetJournalEntriesByPromptIdAsync(int promptId, string userId)
     {
-        return await _context.JournalEntries.Where(entry => entry.PromptId == promptId).ToListAsync();
+        return await _context.JournalEntries
+            .Where(entry => entry.PromptId == promptId && entry.UserId == userId)
+            .ToListAsync();
+    }
+
+    public async Task<IEnumerable<JournalEntry>> GetAllByUserIdAsync(string userId)
+    {
+        return await _context.JournalEntries
+            .Where(entry => entry.UserId == userId)
+            .ToListAsync();
     }
 }

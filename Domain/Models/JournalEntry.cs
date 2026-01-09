@@ -8,6 +8,9 @@ public class JournalEntry
     public DateTime CreatedAt { get; set; } = DateTime.Now;
     public DateTime? UpdatedAt { get; set; }
 
+    // User ownership
+    public string UserId { get; set; } = string.Empty;
+
     // Foreign keys
     public int JournalId { get; set; }
     public int PromptId { get; set; }

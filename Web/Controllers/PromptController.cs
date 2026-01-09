@@ -51,7 +51,7 @@ public class PromptController(PromptService service, EntriesService entriesServi
         {
             return NotFound();
         }
-        prompt.JournalEntries = (ICollection<JournalEntry>)await entriesService.GetJournalEntriesByPromptIdAsync(id);
+        prompt.JournalEntries = (ICollection<JournalEntry>)await entriesService.GetJournalEntriesByPromptIdAsync(id, userId);
         return View(prompt);
     }
 

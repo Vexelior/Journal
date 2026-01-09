@@ -83,11 +83,20 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             entity.Property(je => je.CreatedAt)
                 .IsRequired();
 
+            entity.Property(je => je.UserId)
+                .IsRequired();
+
+            // User relationship
+            entity.HasOne<IdentityUser>()
+                .WithMany()
+                .HasForeignKey(je => je.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
             // Journal relationship
             entity.HasOne(je => je.Journal)
                 .WithMany(j => j.JournalEntries)
                 .HasForeignKey(je => je.JournalId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
             // Prompt relationship
             entity.HasOne(je => je.Prompt)
@@ -95,6 +104,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                 .HasForeignKey(je => je.PromptId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            entity.HasIndex(je => je.UserId);
             entity.HasIndex(je => new { je.JournalId, je.PromptId, je.EntryDate });
         });
     }
