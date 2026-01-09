@@ -29,7 +29,7 @@ public class EntriesController(EntriesService service, PromptService promptServi
             ViewBag.Prompts ??= new Dictionary<int, Prompt>();
             if (prompt != null && !ViewBag.Prompts.ContainsKey(prompt.Id))
             {
-                ViewBag.Prompts[prompt.Id] = prompt;
+                ViewBag.Prompts[prompt!.Id] = prompt;
             }
         }
 
