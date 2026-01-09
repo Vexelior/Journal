@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Controllers;
 
-[Authorize(Roles = "Admin")]
+[Authorize(Roles = "Admin,User")]
 public class PromptController(PromptService service, EntriesService entriesService) : Controller
 {
     public async Task<IActionResult> Index()

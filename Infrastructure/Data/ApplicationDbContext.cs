@@ -1,4 +1,5 @@
 ﻿using Domain.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -27,6 +28,17 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 
             entity.Property(j => j.CreatedAt)
                 .IsRequired();
+
+            entity.Property(j => j.UserId)
+                .IsRequired();
+
+            // User relationship - configured in Infrastructure layer
+            entity.HasOne<IdentityUser>()
+                .WithMany()
+                .HasForeignKey(j => j.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasIndex(j => j.UserId);
         });
 
         // Prompt configuration

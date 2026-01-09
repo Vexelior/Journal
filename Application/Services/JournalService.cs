@@ -5,14 +5,15 @@ namespace Application.Services;
 
 public class JournalService(IJournalRepository journalRepository)
 {
-    public async Task<Journal?> GetByIdAsync(int id)
+    public async Task<Journal?> GetByIdAsync(int id, string userId)
     {
-        return await journalRepository.GetById(id);
+        var journal = await journalRepository.GetById(id);
+        return journal?.UserId == userId ? journal : null;
     }
 
-    public async Task<IEnumerable<Journal>> GetAllAsync()
+    public async Task<IEnumerable<Journal>> GetAllByUserIdAsync(string userId)
     {
-        return await journalRepository.GetAll();
+        return await journalRepository.GetAllByUserIdAsync(userId);
     }
 
     public async Task AddAsync(Journal journal)
@@ -30,8 +31,8 @@ public class JournalService(IJournalRepository journalRepository)
         await journalRepository.Delete(journal);
     }
 
-    public async Task<Journal?> GetFullJournal(int id)
+    public async Task<Journal?> GetFullJournal(int id, string userId)
     {
-        return await journalRepository.GetWithEntriesAndPromptsAsync(id);
+        return await journalRepository.GetWithEntriesAndPromptsAsync(id, userId);
     }
 }

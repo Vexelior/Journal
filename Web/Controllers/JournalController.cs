@@ -1,21 +1,27 @@
 ﻿using Application.Services;
 using Domain.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Globalization;
 
 namespace Web.Controllers;
 
-[Authorize(Roles = "Admin")]
-public class JournalController(JournalService journalService, DocumentExportService documentService) : Controller
+[Authorize(Roles = "Admin,User")]
+public class JournalController(JournalService journalService, DocumentExportService documentService, UserManager<IdentityUser> userManager) : Controller
 {
+    private string? GetCurrentUserId() => userManager.GetUserId(User);
+
     public async Task<IActionResult> Index(string search, int page = 1, int pageSize = 9)
     {
-        var journals = await journalService.GetAllAsync();
+        var userId = GetCurrentUserId();
+        if (userId == null) return Unauthorized();
+
+        var journals = await journalService.GetAllByUserIdAsync(userId);
         var fullJournals = new List<Journal>();
         foreach (var journal in journals)
         {
-            var fullJournal = await journalService.GetFullJournal(journal.Id);
+            var fullJournal = await journalService.GetFullJournal(journal.Id, userId);
             if (fullJournal != null)
             {
                 fullJournals.Add(fullJournal);
@@ -43,8 +49,12 @@ public class JournalController(JournalService journalService, DocumentExportServ
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(Journal journal)
     {
+        var userId = GetCurrentUserId();
+        if (userId == null) return Unauthorized();
+
         if (ModelState.IsValid)
         {
+            journal.UserId = userId;
             await journalService.AddAsync(journal);
             return RedirectToAction(nameof(Index));
         }
@@ -53,7 +63,10 @@ public class JournalController(JournalService journalService, DocumentExportServ
 
     public async Task<IActionResult> Details(int id)
     {
-        var journal = await journalService.GetFullJournal(id);
+        var userId = GetCurrentUserId();
+        if (userId == null) return Unauthorized();
+
+        var journal = await journalService.GetFullJournal(id, userId);
         if (journal == null)
         {
             return NotFound();
@@ -63,7 +76,10 @@ public class JournalController(JournalService journalService, DocumentExportServ
 
     public async Task<IActionResult> Edit(int id)
     {
-        var journal = await journalService.GetFullJournal(id);
+        var userId = GetCurrentUserId();
+        if (userId == null) return Unauthorized();
+
+        var journal = await journalService.GetFullJournal(id, userId);
         if (journal == null)
         {
             return NotFound();
@@ -75,12 +91,24 @@ public class JournalController(JournalService journalService, DocumentExportServ
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(int id, Journal journal)
     {
+        var userId = GetCurrentUserId();
+        if (userId == null) return Unauthorized();
+
         if (id != journal.Id)
         {
             return NotFound();
         }
+
+        // Verify ownership
+        var existingJournal = await journalService.GetByIdAsync(id, userId);
+        if (existingJournal == null)
+        {
+            return NotFound();
+        }
+
         if (ModelState.IsValid)
         {
+            journal.UserId = userId;
             await journalService.UpdateAsync(journal);
             return RedirectToAction(nameof(Index));
         }
@@ -91,7 +119,10 @@ public class JournalController(JournalService journalService, DocumentExportServ
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Delete(int id)
     {
-        var journal = await journalService.GetByIdAsync(id);
+        var userId = GetCurrentUserId();
+        if (userId == null) return Unauthorized();
+
+        var journal = await journalService.GetByIdAsync(id, userId);
         if (journal == null)
         {
             return NotFound();
@@ -102,7 +133,10 @@ public class JournalController(JournalService journalService, DocumentExportServ
 
     public async Task<IActionResult> ExportPdf(int id)
     {
-        var journal = await journalService.GetFullJournal(id);
+        var userId = GetCurrentUserId();
+        if (userId == null) return Unauthorized();
+
+        var journal = await journalService.GetFullJournal(id, userId);
         if (journal == null)
         {
             return NotFound();

@@ -9,26 +9,51 @@ public static class DbInitializer
     {
         await context.Database.EnsureCreatedAsync();
 
-        if (context.Users.Any())
+        if (!await roleManager.RoleExistsAsync("Admin"))
         {
-            return;
+            var adminRole = new IdentityRole("Admin");
+            await roleManager.CreateAsync(adminRole);
         }
 
-        var adminRole = new IdentityRole("Admin");
-        await roleManager.CreateAsync(adminRole);
-
-        var adminUser = new IdentityUser
+        if (!await roleManager.RoleExistsAsync("User"))
         {
-            UserName = "Alex",
-            Email = "asanderson1994s@gmail.com",
-            EmailConfirmed = true
-        };
+            var userRole = new IdentityRole("User");
+            await roleManager.CreateAsync(userRole);
+        }
 
-        var result = await userManager.CreateAsync(adminUser, "Pass1234!");
-        
-        if (result.Succeeded && !string.IsNullOrEmpty(adminRole.Name))
+        var adminUser = await userManager.FindByEmailAsync("asanderson1994s@gmail.com");
+        if (adminUser == null)
         {
-            await userManager.AddToRoleAsync(adminUser, adminRole.Name);
+            adminUser = new IdentityUser
+            {
+                UserName = "Alex",
+                Email = "asanderson1994s@gmail.com",
+                EmailConfirmed = true
+            };
+
+            var result = await userManager.CreateAsync(adminUser, "Pass1234!");
+            
+            if (result.Succeeded)
+            {
+                await userManager.AddToRoleAsync(adminUser, "Admin");
+            }
+        }
+
+        var userUser = await userManager.FindByEmailAsync("testuser123@gmail.com");
+        if (userUser == null)
+        {
+            userUser = new IdentityUser
+            {
+                UserName = "TestUser",
+                Email = "testuser123@gmail.com",
+                EmailConfirmed = true
+            };
+            var result = await userManager.CreateAsync(userUser, "Pass1234!");
+            
+            if (result.Succeeded)
+            {
+                await userManager.AddToRoleAsync(userUser, "User");
+            }
         }
     }
 }
