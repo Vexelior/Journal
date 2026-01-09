@@ -25,7 +25,7 @@ public class EntriesController(EntriesService service, PromptService promptServi
 
         foreach (var entry in entries)
         {
-            var prompt = await promptService.GetByIdAsync(entry.PromptId);
+            var prompt = await promptService.GetByIdAsync(entry.PromptId, userId);
             ViewBag.Prompts ??= new Dictionary<int, Prompt>();
             if (prompt != null && !ViewBag.Prompts.ContainsKey(prompt.Id))
             {
@@ -55,7 +55,7 @@ public class EntriesController(EntriesService service, PromptService promptServi
 
         ViewBag.JournalId = journalId;
 
-        var prompts = await promptService.GetAllActiveAsync();
+        var prompts = await promptService.GetAllActiveAsync(userId);
         ViewBag.Prompts = new SelectList(prompts, "Id", "Text");
 
         return View();
@@ -91,7 +91,7 @@ public class EntriesController(EntriesService service, PromptService promptServi
         }
 
         ViewBag.JournalId = journalId;
-        var prompts = await promptService.GetAllActiveAsync();
+        var prompts = await promptService.GetAllActiveAsync(userId);
         ViewBag.Prompts = new SelectList(prompts, "Id", "Text", promptId);
         return View();
     }
@@ -106,7 +106,8 @@ public class EntriesController(EntriesService service, PromptService promptServi
         {
             return NotFound();
         }
-        var prompt = await promptService.GetByIdAsync(entry.PromptId);
+        // Get prompt - but only if it belongs to the user
+        var prompt = await promptService.GetByIdAsync(entry.PromptId, userId);
         ViewBag.Prompt = prompt;
         return View(entry);
     }
@@ -121,7 +122,8 @@ public class EntriesController(EntriesService service, PromptService promptServi
         {
             return NotFound();
         }
-        var prompt = await promptService.GetByIdAsync(entry.PromptId);
+        // Get prompt - but only if it belongs to the user
+        var prompt = await promptService.GetByIdAsync(entry.PromptId, userId);
         ViewBag.Prompt = prompt;
         return View(entry);
     }
@@ -145,7 +147,7 @@ public class EntriesController(EntriesService service, PromptService promptServi
         }
         entry.EntryDate = entryDate;
         entry.Content = content;
-        
+
         try
         {
             await service.UpdateAsync(entry, userId);
@@ -169,7 +171,7 @@ public class EntriesController(EntriesService service, PromptService promptServi
         {
             return NotFound();
         }
-        
+
         try
         {
             await service.DeleteAsync(entry, userId);

@@ -56,6 +56,17 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 
             entity.Property(p => p.CreatedAt)
                 .IsRequired();
+
+            entity.Property(p => p.UserId)
+                .IsRequired();
+
+            // User relationship
+            entity.HasOne<IdentityUser>()
+                .WithMany()
+                .HasForeignKey(p => p.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasIndex(p => p.UserId);
         });
 
         // JournalEntry configuration

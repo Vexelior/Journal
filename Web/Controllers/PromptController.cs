@@ -1,16 +1,22 @@
 ﻿using Application.Services;
 using Domain.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Controllers;
 
 [Authorize(Roles = "Admin,User")]
-public class PromptController(PromptService service, EntriesService entriesService) : Controller
+public class PromptController(PromptService service, EntriesService entriesService, UserManager<IdentityUser> userManager) : Controller
 {
+    private string? GetCurrentUserId() => userManager.GetUserId(User);
+
     public async Task<IActionResult> Index()
     {
-        var prompts = await service.GetAllAsync();
+        var userId = GetCurrentUserId();
+        if (userId == null) return Unauthorized();
+
+        var prompts = await service.GetAllByUserIdAsync(userId);
         return View(prompts);
     }
 
@@ -23,8 +29,12 @@ public class PromptController(PromptService service, EntriesService entriesServi
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(Prompt prompt)
     {
+        var userId = GetCurrentUserId();
+        if (userId == null) return Unauthorized();
+
         if (ModelState.IsValid)
         {
+            prompt.UserId = userId;
             await service.AddAsync(prompt);
             return RedirectToAction(nameof(Index));
         }
@@ -33,7 +43,10 @@ public class PromptController(PromptService service, EntriesService entriesServi
 
     public async Task<IActionResult> Details(int id)
     {
-        var prompt = await service.GetByIdAsync(id);
+        var userId = GetCurrentUserId();
+        if (userId == null) return Unauthorized();
+
+        var prompt = await service.GetByIdAsync(id, userId);
         if (prompt == null)
         {
             return NotFound();
@@ -44,7 +57,10 @@ public class PromptController(PromptService service, EntriesService entriesServi
 
     public async Task<IActionResult> Edit(int id)
     {
-        var prompt = await service.GetByIdAsync(id);
+        var userId = GetCurrentUserId();
+        if (userId == null) return Unauthorized();
+
+        var prompt = await service.GetByIdAsync(id, userId);
         if (prompt == null)
         {
             return NotFound();
@@ -56,14 +72,25 @@ public class PromptController(PromptService service, EntriesService entriesServi
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(int id, Prompt prompt)
     {
+        var userId = GetCurrentUserId();
+        if (userId == null) return Unauthorized();
+
         if (id != prompt.Id)
         {
             return NotFound();
         }
         if (ModelState.IsValid)
         {
-            await service.UpdateAsync(prompt);
-            return RedirectToAction(nameof(Details), new { id = prompt.Id });
+            try
+            {
+                prompt.UserId = userId;
+                await service.UpdateAsync(prompt, userId);
+                return RedirectToAction(nameof(Details), new { id = prompt.Id });
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Forbid();
+            }
         }
         return View(prompt);
     }
@@ -72,26 +99,48 @@ public class PromptController(PromptService service, EntriesService entriesServi
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Delete(int id)
     {
-        var prompt = await service.GetByIdAsync(id);
+        var userId = GetCurrentUserId();
+        if (userId == null) return Unauthorized();
+
+        var prompt = await service.GetByIdAsync(id, userId);
         if (prompt == null)
         {
             return NotFound();
         }
-        await service.DeleteAsync(prompt);
-        return RedirectToAction(nameof(Index));
+
+        try
+        {
+            await service.DeleteAsync(prompt, userId);
+            return RedirectToAction(nameof(Index));
+        }
+        catch (UnauthorizedAccessException)
+        {
+            return Forbid();
+        }
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> ToggleActive(int id)
     {
-        var prompt = await service.GetByIdAsync(id);
+        var userId = GetCurrentUserId();
+        if (userId == null) return Unauthorized();
+
+        var prompt = await service.GetByIdAsync(id, userId);
         if (prompt == null)
         {
             return NotFound();
         }
-        prompt.IsActive = !prompt.IsActive;
-        await service.UpdateAsync(prompt);
-        return RedirectToAction(nameof(Index));
+
+        try
+        {
+            prompt.IsActive = !prompt.IsActive;
+            await service.UpdateAsync(prompt, userId);
+            return RedirectToAction(nameof(Index));
+        }
+        catch (UnauthorizedAccessException)
+        {
+            return Forbid();
+        }
     }
 }

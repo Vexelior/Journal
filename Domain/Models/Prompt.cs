@@ -7,6 +7,9 @@ public class Prompt
     public DateTime CreatedAt { get; set; } = DateTime.Now;
     public bool IsActive { get; set; } = true;
 
+    // User ownership
+    public string UserId { get; set; } = string.Empty;
+
     // Navigation properties
     public ICollection<JournalEntry> JournalEntries { get; set; } = new List<JournalEntry>();
 }
